@@ -2,16 +2,21 @@ package com.veryworks.android.camera;
 
 import android.Manifest;
 import android.annotation.TargetApi;
+import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener{
     private final int REQ_PERMISSION = 100;
     Button btnGallery, btnCamera;
     ImageView imageView;
@@ -24,6 +29,10 @@ public class MainActivity extends AppCompatActivity {
         imageView = (ImageView) findViewById(R.id.imageView);
         btnGallery = (Button) findViewById(R.id.btnGallery);
         btnCamera = (Button) findViewById(R.id.btnCamera);
+
+        // 리스너
+        btnCamera.setOnClickListener(this);
+        btnGallery.setOnClickListener(this);
 
         // 버튼 잠금
         btnCamera.setEnabled(false);
@@ -69,5 +78,32 @@ public class MainActivity extends AppCompatActivity {
     private void init(){
         btnCamera.setEnabled(true);
         btnGallery.setEnabled(true);
+    }
+
+    @Override
+    public void onClick(View v) {
+        Intent intent = null;
+        switch(v.getId()){
+            case R.id.btnGallery:
+                intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                startActivityForResult( Intent.createChooser(intent, "앱을 선택하세요") , 100);
+                break;
+            case R.id.btnCamera:
+                break;
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(resultCode == RESULT_OK){
+            switch (requestCode) {
+                case 100:
+                    Uri imageUri = data.getData();
+                    Log.i("Gallery","imageUri========================="+imageUri.getPath());
+                    imageView.setImageURI(imageUri);
+                    break;
+            }
+        }
     }
 }
