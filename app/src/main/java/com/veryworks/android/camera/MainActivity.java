@@ -16,6 +16,8 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+
 public class MainActivity extends AppCompatActivity implements View.OnClickListener{
     private final int REQ_PERMISSION = 100;
     Button btnGallery, btnCamera;
@@ -89,6 +91,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 startActivityForResult( Intent.createChooser(intent, "앱을 선택하세요") , 100);
                 break;
             case R.id.btnCamera:
+                intent = new Intent(this, CameraActivity.class);
+                startActivity(intent);
                 break;
         }
     }
@@ -100,8 +104,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             switch (requestCode) {
                 case 100:
                     Uri imageUri = data.getData();
-                    Log.i("Gallery","imageUri========================="+imageUri.getPath());
-                    imageView.setImageURI(imageUri);
+                    Log.i("Gallery","imageUri========================="+imageUri);
+                    Glide.with(this).load(imageUri).into(imageView);
+                    //imageView.setImageURI(imageUri);
                     break;
             }
         }
