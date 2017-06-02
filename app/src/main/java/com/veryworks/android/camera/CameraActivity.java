@@ -8,6 +8,7 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -92,11 +93,13 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
             if (resultCode == RESULT_OK) {
                 Uri imageUri = null;
                 // 롤리팝 미만 버전에서는 data 인텐트에 찍은 사진의 uri 가 담겨온다.
-                if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                if(Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
                     imageUri = data.getData();
                 }else{
                     imageUri = fileUri;
                 }
+                Log.i("Camera","fileUri========================"+fileUri);
+                Log.i("Camera","imageUri========================"+imageUri);
 
                 imageView.setImageURI(imageUri);
             }
